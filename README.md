@@ -1,4 +1,4 @@
-# herdr-personal
+# herdr-lucasprag
 
 My [Herdr](https://herdr.dev) setup (`~/.config/herdr-app`) on my personal Mac.
 Started from my work setup, now its own thing.
