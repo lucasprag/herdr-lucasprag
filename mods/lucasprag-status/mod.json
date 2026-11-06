@@ -1,0 +1,8 @@
+{
+  "place": "none",
+  "overlay": { "kind": "popup", "frame": "none", "width": 340, "height": 600 },
+  "cloned_from": {
+    "name": "workspace-status",
+    "version": "0.1.12"
+  }
+}

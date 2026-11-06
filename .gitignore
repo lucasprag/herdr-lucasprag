@@ -1,0 +1,25 @@
+# Allowlist: ignore everything, then re-include what's mine.
+# Herdr's shipped mods/layouts and everything the app writes stay out
+# (shared.json, data/, telemetry/, view.json, ...). Mods installed from their
+# own repos (automate-everything) are synced copies and stay out too.
+/*
+!/.gitignore
+!/README.md
+!/keys.json
+
+!/layouts/
+/layouts/*
+!/layouts/lucasprag.json
+
+!/mods/
+/mods/*
+!/mods/agent-picker/
+!/mods/new-space/
+!/mods/prs/
+!/mods/lucasprag-*/
+
+# Written by the app or caches, even inside my mods
+*.d.ts
+jsconfig.json
+*.error
+/mods/prs/avatars/
