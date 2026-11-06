@@ -96,7 +96,7 @@ export default class AgentPicker extends View {
       const on = i === this.at;
       return h_flex()
         .id(`ap-${r.agent.key}-${r.model ?? "default"}`)
-        .px(10).h(ROW).items_center().gap(10).rounded(7)
+        .px(10).h(ROW).items_center().gap(10).rounded(3)
         .cursor_pointer()
         .when(on, (el) => el.bg(t.hover))
         .hover((s) => s.bg(t.hover))
@@ -129,7 +129,7 @@ export default class AgentPicker extends View {
       .child(h_flex().px(18).items_center()
         .child(div().flex_1().text_size(15).font_semibold().text_color(t.foreground).child("New agent tab"))
         .child(div().text_size(11).text_color(t.dim).child("Esc")))
-      .child(h_flex().mx(18).h(36).flex_none().px(10).gap(8).items_center().rounded(9).border_1().border_color(t.accent).bg(t.background)
+      .child(h_flex().mx(18).h(36).flex_none().px(10).gap(8).items_center().rounded(4).border_1().border_color(t.accent).bg(t.background)
         .child(svg("mods/workspace-chrome/search.svg").size(15).text_color(t.dim))
         .child(Input.new(this.input).flex_1().h_full().text_size(12.8).text_color(t.foreground)))
       .child(v_flex().id("ap-list").mx(18).h(height).min_h(0).mb(6)

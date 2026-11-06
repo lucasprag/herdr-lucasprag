@@ -221,7 +221,7 @@ export default class PullRequests extends View {
     const mark = pr.merged ? null : this.ci(t, pr);
     return v_flex()
       .id(`pr-${pr.repository.nameWithOwner}-${pr.number}`)
-      .mx(8).px(10).py(6).gap(3).rounded(8).flex_none().cursor_pointer()
+      .mx(8).px(10).py(6).gap(3).rounded(3).flex_none().cursor_pointer()
       .hover((s) => s.bg(t.hover))
       .on_click(() => { exec("open", [pr.url]); })
       .child(h_flex().gap(8).items_center()
@@ -252,7 +252,7 @@ export default class PullRequests extends View {
     const t = theme();
     const sections = this.sections ?? {};
     const total = SECTIONS.reduce((n, [k]) => n + (k === "mergedToday" ? 0 : sections[k]?.length ?? 0), 0);
-    const pill = (text) => div().h(20).px(7).rounded(5).border(1).border_color(t.border).flex().items_center().text_size(10.5).text_color(t.muted).child(text);
+    const pill = (text) => div().h(20).px(7).rounded(2).border(1).border_color(t.border).flex().items_center().text_size(10.5).text_color(t.muted).child(text);
     const body = [];
     for (const [key, label] of SECTIONS) {
       const list = sections[key] ?? [];
@@ -261,14 +261,14 @@ export default class PullRequests extends View {
     }
     return v_flex()
       .size_full().min_h(0)
-      .rounded(10).overflow_hidden().bg(t.background).border_1().border_color(t.border)
+      .overflow_hidden().bg(t.background)
       .text_size(13)
       .child(h_flex().h(42).flex_none().px(14).gap(8).items_center().border_b(1).border_color(t.border)
         .child(div().font_semibold().text_color(t.foreground).child("Pull requests"))
         .when(this.sections !== null, (el) => el.child(pill(`${total} open · last 30d`)))
         .child(div().flex_1())
         .child(div().text_size(11.5).text_color(t.dim).child("github.com"))
-        .child(div().id("pr-refresh").size(24).flex_none().flex().items_center().justify_center().rounded(6).text_color(t.dim)
+        .child(div().id("pr-refresh").size(24).flex_none().flex().items_center().justify_center().rounded(2).text_color(t.dim)
           .hover((s) => s.bg(t.hover).text_color(t.foreground))
           .on_click((_e, cx) => this.refresh(cx))
           .child(this.busy ? svg("mods/prs/refresh.svg").size(13).spin(SPIN_MS) : svg("mods/prs/refresh.svg").size(13))))

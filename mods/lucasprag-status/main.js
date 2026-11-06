@@ -193,8 +193,8 @@ export default class SmileStatus extends View {
 
   bar(t, left) {
     const share = left === null ? 0 : left / 100;
-    return div().w(44).h(5).flex_none().rounded(3).bg(t.raised).overflow_hidden()
-      .child(div().h_full().w(44 * share).rounded(3).bg(left !== null && left < 15 ? t.blocked : t.accent));
+    return div().w(44).h(5).flex_none().rounded(1).bg(t.raised).overflow_hidden()
+      .child(div().h_full().w(44 * share).rounded(1).bg(left !== null && left < 15 ? t.blocked : t.accent));
   }
 
   window(t, w, suffix) {
@@ -282,7 +282,7 @@ export default class SmileStatus extends View {
     const u = usage();
     const line = () => div().h(1).w_full().flex_none().bg(t.border);
     const sections = this.providers(u).flatMap((p, i) => (i ? [line(), this.section(t, p)] : [this.section(t, p)]));
-    const panel = v_flex().w(POP_W).flex_none().rounded(10).overflow_hidden().bg(t.popover).border_1().border_color(t.border).shadow_lg()
+    const panel = v_flex().w(POP_W).flex_none().rounded(4).overflow_hidden().bg(t.popover).border_1().border_color(t.border).shadow_lg()
       .child(h_flex().h(38).px(14).gap(8).items_center().flex_none()
         .child(div().flex_1().text_color(t.foreground).font_medium().child("Usage"))
         .child(div().text_size(11.5).text_color(t.dim).child(u.loading ? "Updating…" : ago(u.at)))
@@ -307,7 +307,7 @@ export default class SmileStatus extends View {
     return h_flex().size_full().on_size_change((size) => { this.barWidth = size.width; }).min_w(0).px(14).gap(16).items_center().bg(t.chrome).border_t(1).border_color(t.border).text_size(11.8).text_color(t.muted)
       .child(label(space?.machine ? "server" : "monitor", space?.machine ?? "This computer"))
       .when(Boolean(space?.branch), (el) => el.child(label("branch", space.branch)))
-      .child(h_flex().gap(6).items_center().flex_none().child(div().size(6).rounded(3).bg(t.dim)).child(`${list.length} agents`)
+      .child(h_flex().gap(6).items_center().flex_none().child(div().size(6).rounded(1).bg(t.dim)).child(`${list.length} agents`)
         .when(needs > 0, (el) => el.child(div().text_color(t.blocked).child(`· ${needs} needs you`))))
       .child(h_flex().gap(2).h_full().items_center().flex_none()
         .child(h_flex().id("usage").h_full().px(8).ml(-8).gap(10).items_center().flex_none().cursor_pointer()

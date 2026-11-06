@@ -125,7 +125,7 @@ export default class NewSpace extends View {
   field(t, id, label, state, focused) {
     return v_flex().mx(18).gap(6)
       .child(div().text_size(11.5).text_color(t.dim).child(label))
-      .child(h_flex().id(id).h(36).flex_none().px(12).items_center().rounded(9).border_1()
+      .child(h_flex().id(id).h(36).flex_none().px(12).items_center().rounded(4).border_1()
         .border_color(focused ? t.accent : t.input).bg(t.background)
         .on_click(() => state.focus())
         .child(Input.new(state).flex_1().h_full().text_size(12.8).text_color(t.foreground)));
@@ -150,7 +150,7 @@ export default class NewSpace extends View {
       const on = i === this.at;
       return h_flex()
         .id(`ns-${r.folder}`)
-        .px(10).h(ROW).items_center().gap(10).rounded(7)
+        .px(10).h(ROW).items_center().gap(10).rounded(3)
         .cursor_pointer()
         .when(on, (el) => el.bg(t.hover))
         .hover((s) => s.bg(t.hover))

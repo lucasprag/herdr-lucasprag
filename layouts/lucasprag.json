@@ -1,6 +1,7 @@
 {
   "id": "root",
   "type": "row",
+  "theme": "lucasprag",
   "titlebar": "none",
   "traffic_lights": [
     12,
@@ -100,26 +101,31 @@
         {
           "id": "work-body",
           "type": "row",
-          "padding": 2,
-          "gap": 2,
+          "padding": 0,
+          "gap": 0,
+          "divider": {
+            "width": 1,
+            "color": "border"
+          },
           "children": [
             {
               "id": "main",
               "type": "block",
+              "background": "border",
               "content": {
                 "tab": "active",
                 "pane": {
-                  "gap": 2,
-                  "radius": 10,
+                  "gap": 1,
+                  "radius": 0,
                   "background": "background",
                   "lone": true,
                   "border": {
-                    "width": 1,
+                    "width": 0,
                     "color": "border"
                   },
                   "focus": {
-                    "width": 1,
-                    "color": "accent"
+                    "width": 0,
+                    "color": "border"
                   },
                   "header": {
                     "content": {
@@ -151,7 +157,7 @@
                       "id": "files",
                       "type": "block",
                       "content": {
-                        "mod": "files"
+                        "mod": "lucasprag-files"
                       }
                     },
                     {

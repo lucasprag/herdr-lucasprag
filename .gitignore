@@ -23,3 +23,6 @@
 jsconfig.json
 *.error
 /mods/prs/avatars/
+!/themes/
+/themes/*
+!/themes/lucasprag.json
