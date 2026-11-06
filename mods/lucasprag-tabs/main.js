@@ -53,7 +53,7 @@ export default class Tabs extends View {
     const space = spaces().find(p => p.active);
     const shown = space?.tabs ?? [];
     const stop = (_e, cx) => cx.stop_propagation();
-    const button = (id, label, action) => div().id(id).size(26).flex_none().flex().items_center().justify_center().rounded(2).text_color(t.dim).hover(s => s.bg(t.hover).text_color(t.foreground))
+    const button = (id, label, action) => div().id(id).size(26).flex_none().flex().items_center().justify_center().rounded(3).text_color(t.dim).hover(s => s.bg(t.hover).text_color(t.foreground))
       .on_mouse_down("left", stop).on_click(action).child(label);
     const item = (c, i) => {
       const program = panes().find(p => p.tab === c.id && p.program?.agent)?.program ?? panes().find(p => p.tab === c.id)?.program;
@@ -87,7 +87,7 @@ export default class Tabs extends View {
     this.syncPanel(space, panel, body, enabled);
     const panelButton = (id, label, icon) => {
       const on = panel && !panel.hidden && body?.active === id;
-      return h_flex().id(`panel-${id}`).h(26).px(8).gap(5).flex_none().items_center().rounded(2)
+      return h_flex().id(`panel-${id}`).h(26).px(8).gap(5).flex_none().items_center().rounded(3)
         .text_size(12).bg(on ? t.selected : t.chrome).text_color(on ? t.foreground : t.muted)
         .hover(s => s.bg(t.hover)).on_mouse_down("left", stop)
         .on_click(() => {
