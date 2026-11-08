@@ -265,14 +265,21 @@ export default class Spaces extends View {
     // An automation's space (any terminal labelled `automation`) keeps its own row.
     const auto = new Set(terminals().filter((x) => x.labels?.automation).map((x) => x.labels["herdr.space"]));
     const nested = (r) => r.g?.linked && mains.has(r.g.repo) && !(!r.w.machine && auto.has(r.w.id));
+    // A worktree goes under the space it was made from (a `worktree.parent` label on one of its
+    // terminals, when that space is on the same repo), else under the repo's first space.
+    const parent = new Map(terminals().filter((x) => x.labels?.["worktree.parent"]).map((x) => [x.labels["herdr.space"], x.labels["worktree.parent"]]));
+    const first = new Map();
+    for (const r of list) if (r.g && !r.g.linked && !first.has(r.g.repo)) first.set(r.g.repo, r.w.id);
+    const home = (k) => {
+      const p = list.find((r) => r.w.id === parent.get(k.w.id));
+      return p?.g && !p.g.linked && p.g.repo === k.g.repo ? p.w.id : first.get(k.g.repo);
+    };
     const out = [];
-    const placed = new Set(); // repos whose worktrees are listed (under the first of its spaces)
     for (const r of list) {
       if (nested(r)) continue;
       out.push({ ...r, tree: null });
-      if (!r.g || r.g.linked || placed.has(r.g.repo)) continue;
-      placed.add(r.g.repo);
-      const kids = list.filter((k) => nested(k) && k.g.repo === r.g.repo);
+      if (!r.g || r.g.linked) continue;
+      const kids = list.filter((k) => nested(k) && k.g.repo === r.g.repo && home(k) === r.w.id);
       kids.forEach((k, n) => out.push({ ...k, tree: n === kids.length - 1 ? "└─" : "├─" }));
     }
     // Simulate the batch so later indexes include earlier moves. An attempted

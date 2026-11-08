@@ -1,11 +1,12 @@
 // Worktree dialog: { space, action: "new" | "open" | "remove" } or
 // { folder, machine } for a repo without a space; optional { branch, tab, argv }.
 // lucasprag: New worktree's branch starts filled in from the space's Linear issue
-// (htask's linkedTask in ~/.herdr/spaces.json), else from the space's name.
+// (htask's linkedTask in ~/.herdr/spaces.json), else from the space's name, and the new space's
+// terminal is labelled `worktree.parent=<space>` so lucasprag-spaces nests it under this space.
 
 import { View, div } from "gpui-kit";
 import { v_flex, h_flex, InputState, Input, Scrollbar } from "gpui-base";
-import { run, props, closeOverlay, theme, spaces, panes, exec, home, readTextFile } from "herdr";
+import { run, props, closeOverlay, theme, spaces, panes, terminals, exec, home, readTextFile } from "herdr";
 
 // Where a space is now: its first terminal's live folder, else where it was made.
 function place(s, all = panes()) {
@@ -34,7 +35,7 @@ async function suggestedBranch(space) {
     const fromLink = task.url?.match(/\/issue\/[^/]+\/([a-z0-9_-]+)/)?.[1];
     return [task.identifier.toLowerCase(), fromLink ?? words(task.title ?? "")].filter(Boolean).join("-");
   }
-  return words(space.name ?? "");
+  return space.named ? words(space.name) : "";
 }
 const ago = (s) => {
   const d = Date.now() / 1000 - s;
@@ -192,14 +193,14 @@ export default class Worktree extends View {
     this.busy = true;
     this.error = "";
     cx.notify();
-    try { this.error = props().action === "remove" ? await this.remove() : await this.create(); }
+    try { this.error = props().action === "remove" ? await this.remove() : await this.create(cx); }
     catch (error) { this.error = String(error); }
     this.busy = false;
     if (!this.error) this.close();
     cx.notify();
   }
 
-  async create() {
+  async create(cx) {
     const branch = this.text.trim();
     if (!branch) return "Type a branch name.";
     const path = `${ROOT(this.userHome)}/${this.repo.name}/${slug(branch)}`;
@@ -209,7 +210,17 @@ export default class Worktree extends View {
     if (!r.ok) return r.err || "git worktree add failed.";
     const p = props();
     // Leave spaces unnamed so they follow the checkout folder and nest under the repo.
+    const before = new Set(spaces().map((s) => s.id));
     run("space.new", { folder: path, machine: this.on, tab: p.tab, argv: p.argv });
+    const parent = this.space()?.id;
+    if (parent && !this.on) {
+      for (let i = 0; i < 50; i++) {
+        const made = spaces().find((s) => !before.has(s.id));
+        const t = made && terminals().find((x) => x.labels?.["herdr.space"] === made.id);
+        if (t) { await exec("hc", ["label", t.address, `worktree.parent=${parent}`]); break; }
+        await new Promise((done) => cx.timer.after(100, done));
+      }
+    }
     return "";
   }
 
