@@ -1,28 +1,16 @@
 // Start an agent with a model, in a new tab of the current space. Opens with cmd-shift-t
 // (keys.json: mod.open:agent-picker). Type to filter ("opus", "codex astra"), ↑/↓ and Enter
 // to start, Esc to leave. Agents come from knownAgents() (programs.json's run commands);
-// MODELS adds one row per model for the agents listed there, after a plain row (its default).
+// models.json adds one row per model for the agents listed there, after a plain row (its default).
 import { View, div, svg, image } from "gpui-kit";
 import { v_flex, h_flex, InputState, Input } from "gpui-base";
-import { knownAgents, spaces, run, theme, props, closeOverlay, shared, setShared } from "herdr";
+import { knownAgents, spaces, run, theme, props, closeOverlay, shared, setShared, readTextFile, appHome } from "herdr";
 
 
 // Per agent key (as knownAgents() reports it): the models to offer and the argv to add.
-const MODELS = {
-  claude: [
-    { label: "Fable", args: ["--model", "fable"] },
-    { label: "Opus", args: ["--model", "opus"] },
-    // --advisor: Claude Code's server-side advisor tool; Opus consults Fable on hard calls.
-    { label: "Opus + Fable advisor", args: ["--model", "opus", "--advisor", "fable"] },
-    { label: "Sonnet", args: ["--model", "sonnet"] },
-    { label: "Haiku", args: ["--model", "haiku"] },
-  ],
-  codex: [
-    { label: "Astra", args: ["-m", "gpt-6-astra"] },
-    { label: "Sol", args: ["-m", "gpt-6.1-sol"] },
-    { label: "Terra", args: ["-m", "gpt-6.1-terra"] },
-  ],
-};
+// In models.json beside this file, so htask-new (cmd-n) offers the same list.
+const MODELS_FILE = `${appHome()}/mods/agent-picker/models.json`;
+
 const KNOWN = "new-menu.agents"; // the + menu's cache of knownAgents(), shared so both open instantly
 const ROW = 32;
 const LIST_MAX = 400;
@@ -35,12 +23,17 @@ export default class AgentPicker extends View {
     const machine = spaces().find((s) => s.active)?.machine;
     const where = machine ?? "";
     this.agents = shared(KNOWN)?.[where] ?? [];
+    this.models = {};
     this.input = InputState.new({ placeholder: "Start an agent… (claude opus, codex astra)" });
     this.input.on("change", (_e, cx) => { this.filter = this.input.value(); this.at = 0; this.scroll = 0; cx.notify(); });
     this.input.on("submit", () => this.go(this.rows()[this.at]));
     this.input.focus();
     cx.timer.after(600, () => this.input.focus());
     this.handle = cx.focus_handle();
+    cx.spawn(async (cx) => {
+      try { this.models = JSON.parse((await readTextFile(MODELS_FILE)) ?? "{}"); } catch {}
+      cx.notify();
+    });
     cx.spawn(async (cx) => {
       try {
         this.agents = await knownAgents({ on: machine });
@@ -59,7 +52,7 @@ export default class AgentPicker extends View {
     const out = [];
     for (const a of this.agents.filter((a) => a.installed)) {
       out.push({ agent: a, label: a.name, argv: a.run, name: a.name });
-      for (const m of MODELS[a.key] ?? []) {
+      for (const m of Array.isArray(this.models[a.key]) ? this.models[a.key] : []) {
         out.push({ agent: a, label: `${a.name} · ${m.label}`, model: m.label, argv: [...a.run, ...m.args], name: m.label });
       }
     }

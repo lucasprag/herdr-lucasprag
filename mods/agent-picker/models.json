@@ -1,0 +1,15 @@
+{
+  "// what": "Per agent key (as knownAgents() reports it): the models to offer and the argv to add. Read by agent-picker (cmd-shift-t) and htask-new (cmd-n).",
+  "claude": [
+    { "label": "Fable", "args": ["--model", "fable"] },
+    { "label": "Opus", "args": ["--model", "opus"] },
+    { "label": "Opus + Fable advisor", "args": ["--model", "opus", "--advisor", "fable"], "// why": "Claude Code's server-side advisor tool; Opus consults Fable on hard calls." },
+    { "label": "Sonnet", "args": ["--model", "sonnet"] },
+    { "label": "Haiku", "args": ["--model", "haiku"] }
+  ],
+  "codex": [
+    { "label": "Astra", "args": ["-m", "gpt-6-astra"] },
+    { "label": "Sol", "args": ["-m", "gpt-6.1-sol"] },
+    { "label": "Terra", "args": ["-m", "gpt-6.1-terra"] }
+  ]
+}
