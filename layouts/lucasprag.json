@@ -180,6 +180,13 @@
                       "content": {
                         "mod": "automate-everything"
                       }
+                    },
+                    {
+                      "id": "tasks",
+                      "type": "block",
+                      "content": {
+                        "mod": "tick-tick"
+                      }
                     }
                   ]
                 }
