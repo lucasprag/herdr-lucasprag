@@ -72,7 +72,7 @@ export default class Tabs extends View {
       .child(button("tab-new", "+", () => openOverlay({ mod: "lucasprag-new-menu", kind: "popup", width: 250, height: 512 })))
       .child(panelButton("tasks", "Tasks", "mods/tick-tick/tasks.svg"))
       .child(panelButton("automations", "Automations", "mods/automate-everything/automations.svg"))
-      .child(panelButton("prs", "PRs", "mods/prs/pr.svg"))
+      .child(panelButton("prs", "PRs", "mods/github-prs/pr.svg"))
       .when(enabled.includes("changes"), el => el.child(panelButton("changes", "Changes", "mods/changes/changes.svg")))
       .when(enabled.includes("files"), el => el.child(panelButton("files", "Files", "mods/files/file.svg")))
       .when(w?.buttons, el => el.child(button("minimize", w.platform === "windows" ? svg("mods/lucasprag-tabs/win-min.svg").size(16) : "−", () => run("window.minimize")))

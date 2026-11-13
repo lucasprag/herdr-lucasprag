@@ -15,14 +15,12 @@
 /mods/*
 !/mods/agent-picker/
 !/mods/new-space/
-!/mods/prs/
 !/mods/lucasprag-*/
 
 # Written by the app or caches, even inside my mods
 *.d.ts
 jsconfig.json
 *.error
-/mods/prs/avatars/
 !/themes/
 /themes/*
 !/themes/lucasprag.json
