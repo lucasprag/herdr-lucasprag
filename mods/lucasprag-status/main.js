@@ -26,6 +26,17 @@ function until(ms) {
   return parts.slice(0, 2).join(" ");
 }
 
+const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const pad = (n) => String(n).padStart(2, "0");
+
+// "Sat Nov 14, 15:30" in local time. By hand: the runtime ignores toLocaleString's options.
+function localDate(ms) {
+  if (!(ms > 0)) return null;
+  const d = new Date(ms);
+  return `${DAYS[d.getDay()]} ${MONTHS[d.getMonth()]} ${d.getDate()}, ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 const pct = (used) => (typeof used === "number" && Number.isFinite(used) ? Math.max(0, Math.min(100, Math.round(100 - used))) : null);
 const iso = (s) => { const t = Date.parse(s ?? ""); return Number.isFinite(t) ? t : null; };
 const unix = (n) => (typeof n === "number" && Number.isFinite(n) && n > 0 ? n * 1000 : null);
@@ -229,7 +240,7 @@ export default class SmileStatus extends View {
       .child(svg("mods/lucasprag-status/refresh.svg").size(13));
   }
 
-  // A full-width meter: label, bar, "x% left" and when it resets.
+  // A full-width meter: label, bar, "x% left" and when it resets (relative and local).
   meter(t, label, leftText, rightText, left) {
     const bar = div().w_full().h(6).bg(t.raised).overflow_hidden()
       .child(div().h_full().w(`${left ?? 0}%`).bg(left !== null && left < 15 ? t.blocked : t.accent));
@@ -261,7 +272,7 @@ export default class SmileStatus extends View {
     for (const [label, w] of p.meters) {
       if (!w || w.left === null) continue;
       const r = until(w.at);
-      body.child(this.meter(t, label, `${w.left}% left`, r ? `Resets in ${r}` : null, w.left));
+      body.child(this.meter(t, label, `${w.left}% left`, r ? `Resets in ${r} · ${localDate(w.at)}` : null, w.left));
     }
     if (p.credits) {
       const money = (n) => `$${n.toFixed(2)}`;
